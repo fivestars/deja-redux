@@ -19,9 +19,9 @@ export const DejaRedux = {
     this.publisher.send(JSON.stringify({type: types.FULL_STATE, payload: {sender: this.sessionId, state: this.store.getState()}}));
   },
   register(pubChannel, requestChannel) {
-    this.publishing = true;
     this.publisher = new WebSocket(this.makePubChannel(pubChannel));
     this.publisher.onopen = () => {
+      this.publishing = true;
       this.requestSubscriber = new WebSocket(this.makeSubChannel(requestChannel));
       this.requestSubscriber.onmessage = (event) => {
         let action = JSON.parse(event.data);
