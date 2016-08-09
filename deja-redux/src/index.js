@@ -54,7 +54,7 @@ export const DejaRedux = {
       if (!this.hasInitialState) {
           return;
       }
-      this.store.dispatch(action);
+      this.store.dispatch({type: types.REPLAY_ACTION, payload: action});
     };
     this.subscriber.onopen = () => {
       this.stateRequester = new WebSocket(this.makePubChannel(requestChannel));

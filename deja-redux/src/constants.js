@@ -3,3 +3,4 @@ export const SUBSCRIBE = "DEJA:SUBSCRIBE";
 export const UNSUBSCRIBE = "DEJA:UNSUBSCRIBE";
 export const FULL_STATE = "DEJA:FULL_STATE";
 export const PUBLISH_TO = "DEJA:PUBLISH_TO";
+export const REPLAY_ACTION = "DEJA:REPLAY_ACTION";
