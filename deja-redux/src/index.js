@@ -91,7 +91,7 @@ export const combineReducers = (reducers) => {
   const appReducer = reduxCombineReducers(reducers);
   const rootReducer = (state, action) => {
     if (action.type === types.FULL_STATE) {
-      return action.payload;
+      return action.payload.state;
     }
     return appReducer(state, action);
   };
