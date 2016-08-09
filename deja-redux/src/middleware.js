@@ -1,5 +1,5 @@
 import {DejaRedux} from './index';
-import * as types form './constants';
+import * as types from './constants';
 
 export default store => next => action => {
   if (action.type === types.REPLAY_ACTION) {

@@ -7,6 +7,7 @@ export const DejaRedux = {
   subscribed: false,
   init(store, sessionId, makeSubChannel, makePubChannel) {
     this.store = store;
+    this.sessionId = sessionId;
     this.makeSubChannel = makeSubChannel;
     this.makePubChannel = makePubChannel;
   },
