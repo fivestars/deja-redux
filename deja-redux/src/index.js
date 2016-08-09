@@ -5,9 +5,10 @@ let subscriber;
 export const DejaRedux = {
   publishing: false,
   subscribed: false,
-  init(address, store) {
-    this.address = address;
+  init(store, makeSubChannel, makePubChannel) {
     this.store = store;
+    this.makeSubChannel = makeSubChannel;
+    this.makePubChannel = makePubChannel;
   },
   sendFullState() {
     if (!this.publishing) {
@@ -15,11 +16,11 @@ export const DejaRedux = {
     }
     this.publisher.send(JSON.stringify({type: types.FULL_STATE, payload: this.store.getState()}));
   },
-  register(channel) {
+  register(pubChannel, requestChannel) {
     this.publishing = true;
-    this.publisher = new WebSocket(`${this.address}/pub/${channel}/`);
+    this.publisher = new WebSocket(this.makePubChannel(pubChannel));
     this.publisher.onopen = () => {
-      this.requestSubscriber = new WebSocket(`${this.address}/sub/${channel}-requests/`);
+      this.requestSubscriber = new WebSocket(this.makeSubChannel(requestChannel));
       this.requestSubscriber.onmessage = (event) => {
         let action = JSON.parse(event.data);
         if (action.type === types.REQUEST_FULL_STATE) {
@@ -41,10 +42,10 @@ export const DejaRedux = {
     this.publisher = null;
     this.publishing = false;
   },
-  subscribe(channel) {
+  subscribe(subChannel, requestChannel) {
     this.subscribed = true;
     this.hasInitialState = false;
-    this.subscriber = new WebSocket(`${this.address}/sub/${channel}/`);
+    this.subscriber = new WebSocket(this.makeSubChannel(subChannel));
     this.subscriber.onmessage = (event) => {
       let action = JSON.parse(event.data);
       if (action.type === types.FULL_STATE) {
@@ -56,7 +57,7 @@ export const DejaRedux = {
       this.store.dispatch(action);
     };
     this.subscriber.onopen = () => {
-      this.stateRequester = new WebSocket(`${this.address}/pub/${channel}-requests/`);
+      this.stateRequester = new WebSocket(this.makePubChannel(requestChannel));
       this.stateRequester.onopen = () => {
         this.stateRequester.send(JSON.stringify({
           type: types.REQUEST_FULL_STATE
@@ -86,3 +87,6 @@ export const combineReducers = (reducers) => {
   };
   return rootReducer;
 };
+
+export * from './constants';
+export dejaMiddleware from './middleware';
