@@ -1,3 +1,4 @@
+import uuid from 'node-uuid';
 import {combineReducers as reduxCombineReducers} from 'redux';
 import * as types from './constants';
 let subscriber;
@@ -5,9 +6,9 @@ let subscriber;
 export const DejaRedux = {
   publishing: false,
   subscribed: false,
-  init(store, sessionId, makeSubChannel, makePubChannel) {
+  init(store, makeSubChannel, makePubChannel) {
     this.store = store;
-    this.sessionId = sessionId;
+    this.sessionId = uuid.v4();
     this.makeSubChannel = makeSubChannel;
     this.makePubChannel = makePubChannel;
   },
