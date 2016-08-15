@@ -100,4 +100,4 @@ export const combineReducers = (reducers) => {
 };
 
 export * from './constants';
-export dejaMiddleware from './middleware';
+export { replayMiddleware, publishMiddleware }  from './middleware';
