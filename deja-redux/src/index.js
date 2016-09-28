@@ -28,9 +28,9 @@ export const DejaRedux = {
         if (action.type === types.REQUEST_FULL_STATE && action.payload.sender !== this.sessionId) {
           this.sendFullState();
         }
-      }
+      };
       this.sendFullState();
-    }
+    };
   },
   publishAction(action) {
       this.publish({type: types.REPLAY_ACTION, payload: {sender: this.sessionId, action}});
@@ -76,7 +76,7 @@ export const DejaRedux = {
         this.stateRequester.close();
         this.stateRequester = null;
       };
-    }
+    };
   },
   unsubscribe() {
     if (!this.subscribed) {
@@ -88,15 +88,19 @@ export const DejaRedux = {
   }
 };
 
-export const combineReducers = (reducers) => {
-  const appReducer = reduxCombineReducers(reducers);
-  const rootReducer = (state, action) => {
+export const wrapRootReducer = rootReducer => {
+  const wrapper = (state, action) => {
     if (action.type === types.FULL_STATE) {
       return action.payload.state;
     }
-    return appReducer(state, action);
+    return rootReducer(state, action);
   };
-  return rootReducer;
+  return wrapper;
+};
+
+export const combineReducers = (reducers) => {
+  const rootReducer = reduxCombineReducers(reducers);
+  return wrapRootReducer(rootReducer);
 };
 
 export * from './constants';
